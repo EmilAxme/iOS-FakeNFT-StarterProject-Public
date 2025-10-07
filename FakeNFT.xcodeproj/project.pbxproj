@@ -229,7 +229,6 @@
 		3F68069529CBBAF100B4F915 /* FakeNFT */ = {
 			isa = PBXGroup;
 			children = (
-				20BC6FFF2E95A70D00481AC2 /* Docs */,
 				3F68069629CBBAF100B4F915 /* AppDelegate.swift */,
 				3F68069829CBBAF100B4F915 /* SceneDelegate.swift */,
 				E1CD40DA2A96BE9B00BE7FE8 /* Resources */,
@@ -239,6 +238,7 @@
 				3F6806C729CBBC5B00B4F915 /* Scenes  */,
 				3F6806C629CBBC4E00B4F915 /* Services */,
 				3F6806A429CBBAF200B4F915 /* Info.plist */,
+				20BC6FFF2E95A70D00481AC2 /* Docs */,
 			);
 			path = FakeNFT;
 			sourceTree = "<group>";
