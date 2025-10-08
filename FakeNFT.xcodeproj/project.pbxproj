@@ -111,8 +111,19 @@
 		E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		20BC70A72E97139800481AC2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"String+Helpers.swift",
+			);
+			target = 3F68069229CBBAF100B4F915 /* FakeNFT */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		20BC6FFF2E95A70D00481AC2 /* Docs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Docs; sourceTree = "<group>"; };
+		20BC70A52E97138700481AC2 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (20BC70A72E97139800481AC2 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +239,7 @@
 		3F68069529CBBAF100B4F915 /* FakeNFT */ = {
 			isa = PBXGroup;
 			children = (
+				20BC70A52E97138700481AC2 /* Helpers */,
 				20BC6FFF2E95A70D00481AC2 /* Docs */,
 				3F68069629CBBAF100B4F915 /* AppDelegate.swift */,
 				3F68069829CBBAF100B4F915 /* SceneDelegate.swift */,
@@ -383,6 +395,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				20BC6FFF2E95A70D00481AC2 /* Docs */,
+				20BC70A52E97138700481AC2 /* Helpers */,
 			);
 			name = FakeNFT;
 			packageProductDependencies = (
