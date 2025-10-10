@@ -9,6 +9,10 @@ import UIKit
 
 final class CartViewController: UIViewController {
     
+    enum Constants {
+        static let inPayLabel = "In Pay"
+    }
+    
     private var presenter: CartPresenterProtocol?
     
     private lazy var nftCollectionView: UICollectionView = {
@@ -31,6 +35,38 @@ final class CartViewController: UIViewController {
         button.tintColor = .label
         button.contentMode = .scaleAspectFit
         return button
+    }()
+    
+    private lazy var nftCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15, weight: .medium)
+        return label
+    }()
+    
+    private lazy var totalPriceLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        return label
+    }()
+    
+    private lazy var inPayButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(Constants.inPayLabel, for: .normal)
+        return button
+    }()
+    private lazy var paymenntZoneLabelsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [nftCountLabel, totalPriceLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 2
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+    
+    private lazy var paymentZoneStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [paymenntZoneLabelsStackView, totalPriceLabel])
+        stackView.axis = .horizontal
+        stackView.distribution = .equalCentering
+        return stackView
     }()
     
     override func viewDidLoad() {
