@@ -26,6 +26,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
+        label.text = "Цена: "
         label.font = .systemFont(ofSize: 13, weight: .medium)
         return label
     }()
@@ -88,23 +89,19 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         }
         
         NSLayoutConstraint.activate([
-            // Изображение NFT
             nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nftImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             nftImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             nftImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
             
-            // Кнопка удаления справа
             delButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             delButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             delButton.widthAnchor.constraint(equalToConstant: 40),
             delButton.heightAnchor.constraint(equalToConstant: 40),
             
-            // Блок текста справа от изображения
             labelsAndPriceStackView.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
             labelsAndPriceStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            // Нижняя граница для корректного авторазмера
             labelsAndPriceStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -12)
         ])
     }
@@ -112,7 +109,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     func configure(with nft: NFTMock) {
         nftImageView.image = nft.image
         nftNameLabel.text = nft.name
-        priceLabel.text = String(format: "Цена: %.2f ETH", nft.price)
+        nftPriceLabel.text = String(format: "%.2f ETH", nft.price)
         ratingLabel.text = String(repeating: "⭐️", count: nft.rating)
     }
 }
