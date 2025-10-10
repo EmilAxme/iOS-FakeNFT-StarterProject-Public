@@ -25,6 +25,14 @@ final class CartViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var sortButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(resource: .sort), for: .normal)
+        button.tintColor = .label
+        button.contentMode = .scaleAspectFit
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -35,10 +43,17 @@ final class CartViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(nftCollectionView)
+        view.addSubview(sortButton)
         nftCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        sortButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            sortButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
+            sortButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -9),
+            sortButton.heightAnchor.constraint(equalToConstant: 42),
+            sortButton.widthAnchor.constraint(equalToConstant: 42),
+            
+            nftCollectionView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             nftCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
