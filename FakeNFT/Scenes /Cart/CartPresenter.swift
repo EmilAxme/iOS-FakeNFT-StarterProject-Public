@@ -19,18 +19,16 @@ protocol CartPresenterProtocol: AnyObject {
 
 final class CartPresenter: CartPresenterProtocol {
     weak var view: CartViewProtocol?
+    private let cartService: CartServiceProtocol
     private(set) var nfts: [NFTMock] = []
     
-    init(view: CartViewProtocol?) {
+    init(view: CartViewProtocol?, cartService: CartServiceProtocol) {
         self.view = view
+        self.cartService = cartService
     }
     
     func viewDidLoad() {
-        nfts = [
-            NFTMock(name: "April", price: 1.78, rating: 1, image: UIImage(resource: .nft1)),
-            NFTMock(name: "Greena", price: 1.78, rating: 3, image: UIImage(resource: .nft2)),
-            NFTMock(name: "Spring", price: 1.78, rating: 5, image: UIImage(resource: .nft3))
-        ]
+        nfts = cartService.fetchNFTs()
         view?.reloadData()
     }
 }
