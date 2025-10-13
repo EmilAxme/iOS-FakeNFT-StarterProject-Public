@@ -46,15 +46,22 @@ final class CartViewController: UIViewController {
     private lazy var totalPriceLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.textColor = UIColor(resource: .greenYP)
         return label
     }()
     
     private lazy var inPayButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Constants.inPayLabel, for: .normal)
+        button.setTitle("К оплате", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        button.backgroundColor = .label
+        button.tintColor = .systemBackground
+        button.layer.cornerRadius = 12
+        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 24, bottom: 10, right: 24)
         return button
     }()
-    private lazy var paymenntZoneLabelsStackView: UIStackView = {
+    
+    private lazy var paymentZoneLabelsStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nftCountLabel, totalPriceLabel])
         stackView.axis = .vertical
         stackView.spacing = 2
@@ -63,16 +70,21 @@ final class CartViewController: UIViewController {
     }()
     
     private lazy var paymentZoneStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [paymenntZoneLabelsStackView, totalPriceLabel])
+        let stackView = UIStackView(arrangedSubviews: [paymentZoneLabelsStackView, inPayButton])
         stackView.axis = .horizontal
-        stackView.distribution = .equalCentering
+        stackView.alignment = .center
+        stackView.spacing = 24
+        stackView.backgroundColor = UIColor.secondarySystemBackground
+        stackView.layer.cornerRadius = 16
+        stackView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         return stackView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        presenter = CartPresenter(view: self)
         setupUI()
         presenter?.viewDidLoad()
     }
@@ -80,8 +92,10 @@ final class CartViewController: UIViewController {
     private func setupUI() {
         view.addSubview(nftCollectionView)
         view.addSubview(sortButton)
+        view.addSubview(paymentZoneStackView)
         nftCollectionView.translatesAutoresizingMaskIntoConstraints = false
         sortButton.translatesAutoresizingMaskIntoConstraints = false
+        paymentZoneStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             sortButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
@@ -89,6 +103,12 @@ final class CartViewController: UIViewController {
             sortButton.heightAnchor.constraint(equalToConstant: 42),
             sortButton.widthAnchor.constraint(equalToConstant: 42),
             
+            inPayButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            paymentZoneStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            paymentZoneStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                        
             nftCollectionView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -127,5 +147,10 @@ extension CartViewController: UICollectionViewDelegateFlowLayout {
 extension CartViewController: CartViewProtocol {
     func reloadData() {
         nftCollectionView.reloadData()
+    }
+    
+    func updateSummary(countText: String, totalText: String) {
+        nftCountLabel.text = countText
+        totalPriceLabel.text = totalText
     }
 }
