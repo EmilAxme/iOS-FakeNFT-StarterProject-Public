@@ -29,11 +29,12 @@ final class TabBarController: UITabBarController {
         let cartPresenter = CartPresenter(view: cartViewController, cartService: mockService, router: cartRouter)
         cartViewController.presenter = cartPresenter
         
-        catalogController.tabBarItem = catalogTabBarItem
+        let cartNavController = UINavigationController(rootViewController: cartViewController)
         
+        catalogController.tabBarItem = catalogTabBarItem
         cartViewController.tabBarItem = cartTabBarItem
         
-        viewControllers = [catalogController, cartViewController]
+        viewControllers = [catalogController, cartNavController]
         
         view.backgroundColor = .systemBackground
     }

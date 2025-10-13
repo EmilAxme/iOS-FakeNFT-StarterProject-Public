@@ -28,15 +28,7 @@ final class CartViewController: UIViewController {
         collectionView.register(NFTCollectionViewCell.self, forCellWithReuseIdentifier: NFTCollectionViewCell.reuseIdentifier)
         return collectionView
     }()
-    
-    private lazy var sortButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(resource: .sort), for: .normal)
-        button.tintColor = .label
-        button.contentMode = .scaleAspectFit
-        return button
-    }()
-    
+        
     private lazy var nftCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .medium)
@@ -87,34 +79,44 @@ final class CartViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupUI()
+        setupNavigationBar()
         presenter?.viewDidLoad()
     }
     
     private func setupUI() {
         view.addSubview(nftCollectionView)
-        view.addSubview(sortButton)
         view.addSubview(paymentZoneStackView)
         nftCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        sortButton.translatesAutoresizingMaskIntoConstraints = false
         paymentZoneStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            sortButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
-            sortButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -9),
-            sortButton.heightAnchor.constraint(equalToConstant: 42),
-            sortButton.widthAnchor.constraint(equalToConstant: 42),
-            
             inPayButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+
             paymentZoneStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentZoneStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                        
-            nftCollectionView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
+            paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+
+            nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            nftCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            nftCollectionView.bottomAnchor.constraint(equalTo: paymentZoneStackView.topAnchor, constant: -20)
         ])
+    }
+    
+    private func setupNavigationBar() {
+        guard let navigationController = navigationController else {
+            print("xui")
+            return }
+        navigationController.navigationBar.prefersLargeTitles = false
+
+        let sortImage = UIImage(resource: .sort)
+        let sortButton = UIBarButtonItem(
+            image: sortImage,
+            style: .plain,
+            target: self,
+            action: nil
+        )
+        navigationItem.rightBarButtonItem = sortButton
     }
     
     
