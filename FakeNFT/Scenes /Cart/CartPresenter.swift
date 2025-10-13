@@ -8,15 +8,18 @@
 import Foundation
 import UIKit
 
-protocol CartViewProtocol: AnyObject {
-    func reloadData()
-    func updateSummary(countText: String, totalText: String)
-}
-
 protocol CartPresenterProtocol: AnyObject {
     var nfts: [NFTMock] { get }
     func didTapPayButton()
+    func didTapSortButton()
     func viewDidLoad()
+    func didSelectSortOption(_ option: SortOption)
+}
+
+enum SortOption {
+    case price
+    case rating
+    case name
 }
 
 final class CartPresenter: CartPresenterProtocol {
@@ -47,7 +50,24 @@ final class CartPresenter: CartPresenterProtocol {
         view?.updateSummary(countText: countText, totalText: totalText)
     }
     
+    func didSelectSortOption(_ option: SortOption) {
+        switch option {
+        case .price:
+            nfts.sort { $0.price < $1.price }
+        case .rating:
+            nfts.sort { $0.rating > $1.rating }
+        case .name:
+            nfts.sort { $0.name < $1.name }
+        }
+        view?.reloadData()
+        updateSummary()
+    }
+    
     func didTapPayButton() {
         router.openPaymentSelection()
+    }
+    
+    func didTapSortButton() {
+        view?.showSortOptions()
     }
 }

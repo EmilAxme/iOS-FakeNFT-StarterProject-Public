@@ -7,6 +7,12 @@
 
 import UIKit
 
+protocol CartViewProtocol: AnyObject {
+    func reloadData()
+    func updateSummary(countText: String, totalText: String)
+    func showSortOptions()
+}
+
 final class CartViewController: UIViewController {
     
     enum Constants {
@@ -114,14 +120,38 @@ final class CartViewController: UIViewController {
             image: sortImage,
             style: .plain,
             target: self,
-            action: nil
+            action: #selector(sortButtonTapped)
         )
         navigationItem.rightBarButtonItem = sortButton
     }
     
+    func showSortOptions() {
+        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+        
+        let priceAction = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.price)
+        }
+        
+        let ratingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.rating)
+        }
+        
+        let nameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            self?.presenter?.didSelectSortOption(.name)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel)
+        
+        [priceAction, ratingAction, nameAction, cancelAction].forEach { alert.addAction($0) }
+        present(alert, animated: true)
+    }
     
     @objc private func inPayButtonTapped() {
         presenter?.didTapPayButton()
+    }
+    
+    @objc private func sortButtonTapped() {
+        presenter?.didTapSortButton()
     }
 }
 
