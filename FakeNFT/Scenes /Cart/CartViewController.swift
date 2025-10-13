@@ -13,7 +13,7 @@ final class CartViewController: UIViewController {
         static let inPayLabel = "In Pay"
     }
     
-    private var presenter: CartPresenterProtocol?
+    var presenter: CartPresenterProtocol?
     
     private lazy var nftCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()

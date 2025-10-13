@@ -1,9 +1,9 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-
+    
     var servicesAssembly: ServicesAssembly!
-
+    
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(systemName: "square.stack.3d.up.fill"),
@@ -15,22 +15,25 @@ final class TabBarController: UITabBarController {
         image: UIImage(resource: .cartIcon).withRenderingMode(.alwaysOriginal),
         selectedImage: UIImage(resource: .cartIcon).withRenderingMode(.alwaysTemplate)
     )
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         let catalogController = TestCatalogViewController(
             servicesAssembly: servicesAssembly
         )
         
         let cartViewController = CartViewController()
+        let mockService = MockCartService()
+        let cartPresenter = CartPresenter(view: cartViewController, cartService: mockService)
+        cartViewController.presenter = cartPresenter
         
         catalogController.tabBarItem = catalogTabBarItem
         
         cartViewController.tabBarItem = cartTabBarItem
-
+        
         viewControllers = [catalogController, cartViewController]
-
+        
         view.backgroundColor = .systemBackground
     }
 }
