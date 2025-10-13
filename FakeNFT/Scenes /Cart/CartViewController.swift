@@ -102,7 +102,7 @@ final class CartViewController: UIViewController {
             paymentZoneStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
-            nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             nftCollectionView.bottomAnchor.constraint(equalTo: paymentZoneStackView.topAnchor, constant: -20)
