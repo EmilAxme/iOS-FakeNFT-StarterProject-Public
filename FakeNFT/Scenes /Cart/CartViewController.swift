@@ -53,6 +53,7 @@ final class CartViewController: UIViewController {
     private lazy var inPayButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("К оплате", for: .normal)
+        button.addTarget(self, action: #selector(inPayButtonTapped), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.backgroundColor = .label
         button.tintColor = .systemBackground
@@ -114,6 +115,11 @@ final class CartViewController: UIViewController {
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             nftCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    
+    @objc private func inPayButtonTapped() {
+        presenter?.didTapPayButton()
     }
 }
 

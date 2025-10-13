@@ -15,17 +15,21 @@ protocol CartViewProtocol: AnyObject {
 
 protocol CartPresenterProtocol: AnyObject {
     var nfts: [NFTMock] { get }
+    func didTapPayButton()
     func viewDidLoad()
 }
 
 final class CartPresenter: CartPresenterProtocol {
     weak var view: CartViewProtocol?
     private let cartService: CartServiceProtocol
+    private let router: CartRouterProtocol
+    
     private(set) var nfts: [NFTMock] = []
     
-    init(view: CartViewProtocol?, cartService: CartServiceProtocol) {
+    init(view: CartViewProtocol?, cartService: CartServiceProtocol, router: CartRouterProtocol) {
         self.view = view
         self.cartService = cartService
+        self.router = router
     }
     
     func viewDidLoad() {
@@ -41,5 +45,9 @@ final class CartPresenter: CartPresenterProtocol {
         let countText = "\(count) NFT"
         let totalText = String(format: "%.2f ETH", total)
         view?.updateSummary(countText: countText, totalText: totalText)
+    }
+    
+    func didTapPayButton() {
+        router.openPaymentSelection()
     }
 }
