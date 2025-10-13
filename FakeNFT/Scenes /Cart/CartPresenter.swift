@@ -10,6 +10,7 @@ import UIKit
 
 protocol CartViewProtocol: AnyObject {
     func reloadData()
+    func updateSummary(countText: String, totalText: String)
 }
 
 protocol CartPresenterProtocol: AnyObject {
@@ -29,6 +30,16 @@ final class CartPresenter: CartPresenterProtocol {
     
     func viewDidLoad() {
         nfts = cartService.fetchNFTs()
+        updateSummary()
         view?.reloadData()
+    }
+    
+    private func updateSummary() {
+        let count = nfts.count
+        let total = nfts.reduce(0) { $0 + $1.price }
+        
+        let countText = "\(count) NFT"
+        let totalText = String(format: "%.2f ETH", total)
+        view?.updateSummary(countText: countText, totalText: totalText)
     }
 }
