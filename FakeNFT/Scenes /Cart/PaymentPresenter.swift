@@ -15,10 +15,12 @@ protocol PaymentPresenterProtocol: AnyObject {
 
 final class PaymentPresenter: PaymentPresenterProtocol {
     weak var view: PaymentViewController?
+    private let router: PaymentRouterProtocol
     var currencies: [CurrencyModel] = []
     
-    init(view: PaymentViewController?) {
+    init(view: PaymentViewController?, router: PaymentRouterProtocol) {
         self.view = view
+        self.router = router
     }
     
     func viewDidLoad() {
@@ -35,6 +37,6 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func didTapPayButton() {
-        print("Оплата началась")
+        router.openPaymentSuccess()
     }
 }

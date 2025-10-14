@@ -52,6 +52,7 @@ final class PaymentViewController: UIViewController {
         button.setTitle("Оплатить", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.setTitleColor(UIColor(resource: .whiteYP), for: .normal)
+        button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
         button.backgroundColor = .label
         button.layer.cornerRadius = 16
         return button
@@ -124,6 +125,10 @@ final class PaymentViewController: UIViewController {
     
     @objc private func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func payButtonTapped() {
+        presenter?.didTapPayButton()
     }
 }
 

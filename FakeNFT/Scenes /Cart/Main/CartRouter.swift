@@ -20,15 +20,16 @@ final class CartRouter: CartRouterProtocol {
     
     func openPaymentSelection() {
         let paymentVC = PaymentViewController()
-        let paymentPresenter = PaymentPresenter(view: paymentVC)
+        let paymentRouter = PaymentRouter(viewController: paymentVC)
+        let paymentPresenter = PaymentPresenter(view: paymentVC, router: paymentRouter)
         paymentVC.presenter = paymentPresenter
-        
         paymentVC.hidesBottomBarWhenPushed = true
         
         guard let navigationController = viewController?.navigationController else {
             print("❌ Нет navigationController у \(String(describing: viewController))")
             return
         }
+        
         navigationController.pushViewController(paymentVC, animated: true)
     }
 }
