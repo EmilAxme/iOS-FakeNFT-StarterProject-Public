@@ -18,7 +18,7 @@ final class PaymentViewController: UIViewController {
     private lazy var CoinsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumInteritemSpacing = 7   
+        layout.minimumInteritemSpacing = 7
         layout.minimumLineSpacing = 7
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -27,6 +27,53 @@ final class PaymentViewController: UIViewController {
         collectionView.delegate = self
         collectionView.register(PaymentCollectionViewCell.self, forCellWithReuseIdentifier: PaymentCollectionViewCell.reuseIdentifier)
         return collectionView
+    }()
+    
+    private lazy var termsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Совершая покупку, вы соглашаетесь с условиями"
+        label.font = .systemFont(ofSize: 13)
+        label.textAlignment = .left
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    private lazy var agreementButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Пользовательского соглашения", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
+        button.tintColor = .systemBlue
+        return button
+    }()
+    
+    private lazy var payButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Оплатить", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
+        button.setTitleColor(UIColor(resource: .whiteYP), for: .normal)
+        button.backgroundColor = .label
+        button.layer.cornerRadius = 16
+        return button
+    }()
+    
+    private lazy var labelsStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [termsLabel, agreementButton])
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.spacing = 0
+        return stack
+    }()
+    
+    private lazy var bottomStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [labelsStackView, payButton])
+        stack.axis = .vertical
+        stack.spacing = 12
+        stack.alignment = .leading
+        stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 24, right: 16)
+        stack.backgroundColor = .secondarySystemBackground
+        return stack
     }()
     
     override func viewDidLoad() {
@@ -39,14 +86,24 @@ final class PaymentViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(CoinsCollectionView)
+        view.addSubview(bottomStackView)
         
         CoinsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        bottomStackView.translatesAutoresizingMaskIntoConstraints = false
+        payButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             CoinsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             CoinsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             CoinsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             CoinsCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            
+            payButton.widthAnchor.constraint(equalTo: bottomStackView.widthAnchor, constant: -32),
+            payButton.heightAnchor.constraint(equalToConstant: 56),
+            
+            bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -96,17 +153,17 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
         let cellWidth = (collectionView.bounds.width - totalInterItemSpacing) / columns
         return CGSize(width: cellWidth, height: 60)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         .zero
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat { 7 }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat { 7 }
