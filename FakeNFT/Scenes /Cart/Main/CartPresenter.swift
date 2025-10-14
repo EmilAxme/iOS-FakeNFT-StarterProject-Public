@@ -14,6 +14,7 @@ protocol CartPresenterProtocol: AnyObject {
     func didTapSortButton()
     func viewDidLoad()
     func didSelectSortOption(_ option: SortOption)
+    func deleteNFT(_ nft: NFTMock)
 }
 
 enum SortOption {
@@ -69,5 +70,11 @@ final class CartPresenter: CartPresenterProtocol {
     
     func didTapSortButton() {
         view?.showSortOptions()
+    }
+    
+    func deleteNFT(_ nft: NFTMock) {
+        nfts.removeAll { $0.name == nft.name }
+        view?.reloadData()
+        updateSummary()
     }
 }
