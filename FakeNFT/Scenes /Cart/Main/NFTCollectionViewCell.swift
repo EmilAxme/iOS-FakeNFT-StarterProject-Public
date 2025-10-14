@@ -10,6 +10,8 @@ import UIKit
 final class NFTCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "NFTCollectionViewCell"
     
+    var onDeleteTapped: (() -> Void)?
+    
     private lazy var nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -48,6 +50,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         let buttonImage = UIImage(resource: .basket)
         button.setImage(buttonImage, for: .normal)
+        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -111,5 +114,9 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         nftNameLabel.text = nft.name
         nftPriceLabel.text = String(format: "%.2f ETH", nft.price)
         ratingLabel.text = String(repeating: "⭐️", count: nft.rating)
+    }
+    
+    @objc private func deleteButtonTapped() {
+        onDeleteTapped?()
     }
 }
