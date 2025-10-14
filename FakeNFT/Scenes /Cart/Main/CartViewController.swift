@@ -125,6 +125,17 @@ final class CartViewController: UIViewController {
         navigationItem.rightBarButtonItem = sortButton
     }
     
+    private func showDeleteDialog(for nft: NFTMock) {
+        let alertVC = DeleteNFTAlertViewController()
+        alertVC.modalPresentationStyle = .overFullScreen
+        alertVC.modalTransitionStyle = .crossDissolve
+        alertVC.nftImage = nft.image
+        alertVC.onDelete = { [weak self] in
+            self?.presenter?.deleteNFT(nft)
+        }
+        present(alertVC, animated: true)
+    }
+    
     func showSortOptions() {
         let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
         
@@ -166,6 +177,13 @@ extension CartViewController: UICollectionViewDataSource {
             let nft = presenter?.nfts[indexPath.item]
         else {
             return UICollectionViewCell()
+        }
+        
+        cell.onDeleteTapped = { [weak self] in
+            guard let self else { return }
+            if let nft = self.presenter?.nfts[indexPath.item] {
+                self.showDeleteDialog(for: nft)
+            }
         }
         
         cell.configure(with: nft)
