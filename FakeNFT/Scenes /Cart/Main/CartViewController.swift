@@ -81,6 +81,14 @@ final class CartViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var stubLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Корзина пуста"
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -92,10 +100,15 @@ final class CartViewController: UIViewController {
     private func setupUI() {
         view.addSubview(nftCollectionView)
         view.addSubview(paymentZoneStackView)
+        view.addSubview(stubLabel)
         nftCollectionView.translatesAutoresizingMaskIntoConstraints = false
         paymentZoneStackView.translatesAutoresizingMaskIntoConstraints = false
+        stubLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            stubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             inPayButton.heightAnchor.constraint(equalToConstant: 44),
 
             paymentZoneStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -110,9 +123,7 @@ final class CartViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        guard let navigationController = navigationController else {
-            print("xui")
-            return }
+        guard let navigationController = navigationController else { return }
         navigationController.navigationBar.prefersLargeTitles = false
 
         let sortImage = UIImage(resource: .sort)
