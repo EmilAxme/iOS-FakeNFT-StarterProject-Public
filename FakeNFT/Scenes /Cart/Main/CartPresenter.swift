@@ -30,10 +30,12 @@ final class CartPresenter: CartPresenterProtocol {
     
     private(set) var nfts: [NFTMock] = []
     
-    init(view: CartViewProtocol?, cartService: CartServiceProtocol, router: CartRouterProtocol) {
+    init(view: CartViewProtocol?, cartService: CartServiceProtocol = CartService.shared, router: CartRouterProtocol) {
         self.view = view
         self.cartService = cartService
         self.router = router
+        
+        cartService.delegate = self
     }
     
     func viewDidLoad() {
