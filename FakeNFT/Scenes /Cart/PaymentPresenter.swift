@@ -16,11 +16,13 @@ protocol PaymentPresenterProtocol: AnyObject {
 final class PaymentPresenter: PaymentPresenterProtocol {
     weak var view: PaymentViewController?
     private let router: PaymentRouterProtocol
+    private let cartService: CartServiceProtocol
     var currencies: [CurrencyModel] = []
     
-    init(view: PaymentViewController?, router: PaymentRouterProtocol) {
+    init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol) {
         self.view = view
         self.router = router
+        self.cartService = cartService
     }
     
     func viewDidLoad() {
@@ -38,5 +40,6 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     
     func didTapPayButton() {
         router.openPaymentSuccess()
+        cartService.clearCart()
     }
 }
