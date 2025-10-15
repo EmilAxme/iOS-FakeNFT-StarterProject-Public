@@ -14,6 +14,17 @@ protocol PaymentViewProtocol: AnyObject {
 
 final class PaymentViewController: UIViewController {
     
+    private enum Strings {
+        static let screenTitle = "Payment.title".localized
+        static let termsText = "Payment.termsText".localized
+        static let agreementTitle = "Payment.agreementTitle".localized
+        static let payButtonTitle = "Payment.payButton".localized
+        static let alertTitle = "Payment.alertTitle".localized
+        static let alertMessage = "Payment.alertMessage".localized
+        static let cancel = "Payment.alertCancel".localized
+        static let retry = "Payment.alertRetry".localized
+    }
+    
     var presenter: PaymentPresenterProtocol?
     
     
@@ -33,7 +44,7 @@ final class PaymentViewController: UIViewController {
     
     private lazy var termsLabel: UILabel = {
         let label = UILabel()
-        label.text = "Совершая покупку, вы соглашаетесь с условиями"
+        label.text = Strings.termsText
         label.font = .systemFont(ofSize: 13)
         label.textAlignment = .left
         label.textColor = .secondaryLabel
@@ -43,7 +54,7 @@ final class PaymentViewController: UIViewController {
     
     private lazy var agreementButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Пользовательского соглашения", for: .normal)
+        button.setTitle(Strings.agreementTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         button.tintColor = .systemBlue
         return button
@@ -51,7 +62,7 @@ final class PaymentViewController: UIViewController {
     
     private lazy var payButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Оплатить", for: .normal)
+        button.setTitle(Strings.payButtonTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.setTitleColor(UIColor(resource: .whiteYP), for: .normal)
         button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
@@ -111,7 +122,7 @@ final class PaymentViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        title = "Выберите способ оплаты"
+        title = Strings.screenTitle
         navigationController?.navigationBar.prefersLargeTitles = false
         
         let backImage = UIImage(resource: .backward)
@@ -184,13 +195,13 @@ extension PaymentViewController: PaymentViewProtocol {
     //показывается при первом нажатии на кнопку оплаты
     func showPaymentErrorAlert() {
         let alert = UIAlertController(
-            title: "Упс",
-            message: "Не удалось произвести оплату",
+            title: Strings.alertTitle,
+            message: Strings.alertMessage,
             preferredStyle: .alert
         )
         
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-        let retryAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+        let cancelAction = UIAlertAction(title: Strings.cancel, style: .cancel)
+        let retryAction = UIAlertAction(title: Strings.retry, style: .default) { [weak self] _ in
             self?.presenter?.didTapPayButton()
         }
         

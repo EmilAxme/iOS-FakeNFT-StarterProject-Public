@@ -8,6 +8,12 @@
 import UIKit
 
 final class NFTCollectionViewCell: UICollectionViewCell {
+    
+    private enum Strings {
+        static let pricePrefix = "NFT.pricePrefix".localized
+        static let currencyFormat = "NFT.currencyFormat".localized
+    }
+    
     static let reuseIdentifier = "NFTCollectionViewCell"
     
     var onDeleteTapped: (() -> Void)?
@@ -28,7 +34,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.text = "Цена: "
+        label.text = Strings.pricePrefix
         label.font = .systemFont(ofSize: 13, weight: .medium)
         return label
     }()
@@ -112,7 +118,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     func configure(with nft: NFTMock) {
         nftImageView.image = nft.image
         nftNameLabel.text = nft.name
-        nftPriceLabel.text = String(format: "%.2f ETH", nft.price)
+        nftPriceLabel.text = String(format: Strings.currencyFormat, nft.price)
         ratingLabel.text = String(repeating: "⭐️", count: nft.rating)
     }
     

@@ -17,8 +17,14 @@ protocol CartViewProtocol: AnyObject {
 
 final class CartViewController: UIViewController {
     
-    enum Constants {
-        static let inPayLabel = "In Pay"
+    private enum Strings {
+        static let inPayButtonTitle = "Cart.inPayButton".localized
+        static let emptyCart = "Cart.empty".localized
+        static let sortTitle = "Cart.sort.title".localized
+        static let sortByPrice = "Cart.sort.byPrice".localized
+        static let sortByRating = "Cart.sort.byRating".localized
+        static let sortByName = "Cart.sort.byName".localized
+        static let close = "Cart.sort.close".localized
     }
     
     var presenter: CartPresenterProtocol?
@@ -52,7 +58,7 @@ final class CartViewController: UIViewController {
     
     private lazy var inPayButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("К оплате", for: .normal)
+        button.setTitle(Strings.inPayButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(inPayButtonTapped), for: .touchUpInside)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.backgroundColor = .label
@@ -85,7 +91,7 @@ final class CartViewController: UIViewController {
     
     private lazy var stubLabel: UILabel = {
         let label = UILabel()
-        label.text = "Корзина пуста"
+        label.text = Strings.emptyCart
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textAlignment = .center
         return label
@@ -150,21 +156,21 @@ final class CartViewController: UIViewController {
     }
     
     func showSortOptions() {
-        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: Strings.sortTitle, message: nil, preferredStyle: .actionSheet)
         
-        let priceAction = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+        let priceAction = UIAlertAction(title: Strings.sortByPrice, style: .default) { [weak self] _ in
             self?.presenter?.didSelectSortOption(.price)
         }
         
-        let ratingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+        let ratingAction = UIAlertAction(title: Strings.sortByRating, style: .default) { [weak self] _ in
             self?.presenter?.didSelectSortOption(.rating)
         }
         
-        let nameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+        let nameAction = UIAlertAction(title: Strings.sortByName, style: .default) { [weak self] _ in
             self?.presenter?.didSelectSortOption(.name)
         }
         
-        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel)
+        let cancelAction = UIAlertAction(title: Strings.close, style: .cancel)
         
         [priceAction, ratingAction, nameAction, cancelAction].forEach { alert.addAction($0) }
         present(alert, animated: true)

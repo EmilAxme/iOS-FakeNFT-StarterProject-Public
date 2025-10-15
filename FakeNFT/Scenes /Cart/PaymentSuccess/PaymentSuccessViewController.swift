@@ -9,6 +9,11 @@ import UIKit
 
 final class PaymentSuccessViewController: UIViewController {
     
+    private enum Strings {
+        static let successMessage = "PaymentSuccess.message".localized
+        static let backButtonTitle = "PaymentSuccess.backButton".localized
+    }
+    
     private lazy var successImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(resource: .successNFT))
         imageView.contentMode = .scaleAspectFit
@@ -17,7 +22,7 @@ final class PaymentSuccessViewController: UIViewController {
     
     private lazy var successLabel: UILabel = {
         let label = UILabel()
-        label.text = "Успех! Оплата прошла, поздравляем с покупкой!"
+        label.text = Strings.successMessage
         label.font = .systemFont(ofSize: 22, weight: .bold)
         label.numberOfLines = 2
         label.textAlignment = .center
@@ -34,7 +39,7 @@ final class PaymentSuccessViewController: UIViewController {
     
     private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Вернуться в корзину", for: .normal)
+        button.setTitle(Strings.backButtonTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.backgroundColor = .label
         button.setTitleColor(.systemBackground, for: .normal)

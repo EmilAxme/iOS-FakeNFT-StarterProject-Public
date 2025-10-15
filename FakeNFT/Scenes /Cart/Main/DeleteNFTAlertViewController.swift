@@ -9,6 +9,12 @@ import UIKit
 
 final class DeleteNFTAlertViewController: UIViewController {
     
+    private enum Strings {
+        static let deleteConfirmation = "Delete.confirmation".localized
+        static let delete = "Delete.deleteButton".localized
+        static let cancel = "Delete.cancelButton".localized
+    }
+    
     var nftImage: UIImage?
     var onDelete: (() -> Void)?
     
@@ -40,7 +46,7 @@ final class DeleteNFTAlertViewController: UIViewController {
     
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
-        label.text = "Вы уверены, что хотите удалить объект из корзины?"
+        label.text = Strings.deleteConfirmation
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 13, weight: .medium)
         label.numberOfLines = 2
@@ -50,7 +56,7 @@ final class DeleteNFTAlertViewController: UIViewController {
     
     private lazy var deleteButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Удалить", for: .normal)
+        button.setTitle(Strings.delete, for: .normal)
         button.setTitleColor(UIColor(resource: .deleteLabel), for: .normal)
         button.backgroundColor = .label
         button.layer.cornerRadius = 12
@@ -62,7 +68,7 @@ final class DeleteNFTAlertViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Вернуться", for: .normal)
+        button.setTitle(Strings.cancel, for: .normal)
         button.backgroundColor = .label
         button.setTitleColor(.systemBackground, for: .normal)
         button.layer.cornerRadius = 12
