@@ -24,9 +24,8 @@ final class TabBarController: UITabBarController {
         )
         
         let cartViewController = CartViewController()
-        let mockService = MockCartService()
         let cartRouter = CartRouter(viewController: cartViewController)
-        let cartPresenter = CartPresenter(view: cartViewController, cartService: mockService, router: cartRouter)
+        let cartPresenter = CartPresenter(view: cartViewController, router: cartRouter)
         cartViewController.presenter = cartPresenter
         
         let cartNavController = UINavigationController(rootViewController: cartViewController)
