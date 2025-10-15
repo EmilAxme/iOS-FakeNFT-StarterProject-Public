@@ -9,11 +9,13 @@ import UIKit
 
 protocol PaymentViewProtocol: AnyObject {
     func reloadData()
+    func showPaymentErrorAlert()
 }
 
 final class PaymentViewController: UIViewController {
     
     var presenter: PaymentPresenterProtocol?
+    
     
     private lazy var CoinsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -177,5 +179,23 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
 extension PaymentViewController: PaymentViewProtocol {
     func reloadData() {
         CoinsCollectionView.reloadData()
+    }
+    
+    //показывается при первом нажатии на кнопку оплаты
+    func showPaymentErrorAlert() {
+        let alert = UIAlertController(
+            title: "Упс",
+            message: "Не удалось произвести оплату",
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        let retryAction = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.presenter?.didTapPayButton()
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(retryAction)
+        present(alert, animated: true)
     }
 }

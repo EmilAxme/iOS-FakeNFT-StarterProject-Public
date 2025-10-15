@@ -19,6 +19,8 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     private let cartService: CartServiceProtocol
     var currencies: [CurrencyModel] = []
     
+    private var hasFailedOnce = false
+    
     init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol) {
         self.view = view
         self.router = router
@@ -39,7 +41,14 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func didTapPayButton() {
-        router.openPaymentSuccess()
-        cartService.clearCart()
+        if !hasFailedOnce {
+            hasFailedOnce = true
+            view?.showPaymentErrorAlert()
+        } else {
+            // Со второго раза будет успех и покажет экран успеха
+            router.openPaymentSuccess()
+            cartService.clearCart()
+            hasFailedOnce = false
+        }
     }
 }
