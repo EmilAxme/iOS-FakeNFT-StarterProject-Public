@@ -11,6 +11,8 @@ protocol CartViewProtocol: AnyObject {
     func reloadData()
     func updateSummary(countText: String, totalText: String)
     func showSortOptions()
+    func showEmptyCart()
+    func hideEmptyCart()
 }
 
 final class CartViewController: UIViewController {
@@ -212,6 +214,18 @@ extension CartViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension CartViewController: CartViewProtocol {
+    func showEmptyCart() {
+        nftCollectionView.isHidden = true
+        paymentZoneStackView.isHidden = true
+        stubLabel.isHidden = false
+    }
+
+    func hideEmptyCart() {
+        nftCollectionView.isHidden = false
+        paymentZoneStackView.isHidden = false
+        stubLabel.isHidden = true
+    }
+    
     func reloadData() {
         nftCollectionView.reloadData()
     }
