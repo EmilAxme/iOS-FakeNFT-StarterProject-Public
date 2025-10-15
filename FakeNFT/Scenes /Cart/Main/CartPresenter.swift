@@ -51,6 +51,12 @@ final class CartPresenter: CartPresenterProtocol {
         let countText = "\(count) NFT"
         let totalText = String(format: "%.2f ETH", total)
         view?.updateSummary(countText: countText, totalText: totalText)
+        
+        if nfts.isEmpty {
+            view?.showEmptyCart()
+        } else {
+            view?.hideEmptyCart()
+        }
     }
     
     func didSelectSortOption(_ option: SortOption) {
@@ -75,7 +81,13 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func deleteNFT(_ nft: NFTMock) {
-        nfts.removeAll { $0.name == nft.name }
+        cartService.removeNFT(nft)
+    }
+}
+
+extension CartPresenter: CartServiceDelegate {
+    func cartDidUpdate(_ cartService: CartServiceProtocol) {
+        nfts = cartService.fetchNFTs()
         view?.reloadData()
         updateSummary()
     }
