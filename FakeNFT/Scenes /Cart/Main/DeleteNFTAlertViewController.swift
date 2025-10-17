@@ -19,9 +19,9 @@ final class DeleteNFTAlertViewController: UIViewController {
     var onDelete: (() -> Void)?
     
     private lazy var blurView: UIVisualEffectView = {
-        let blur = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        let blur = UIBlurEffect(style: .light) // Светлый стиль вместо .systemUltraThinMaterialDark
         let view = UIVisualEffectView(effect: blur)
-        view.alpha = 1
+        view.alpha = 1 // оставляем 1, чтобы не затемнять дополнительно
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
