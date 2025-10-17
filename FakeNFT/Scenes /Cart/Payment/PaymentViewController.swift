@@ -27,6 +27,7 @@ final class PaymentViewController: UIViewController {
     
     var presenter: PaymentPresenterProtocol?
     
+    private var selectedIndexPath: IndexPath?
     
     private lazy var CoinsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -39,6 +40,9 @@ final class PaymentViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(PaymentCollectionViewCell.self, forCellWithReuseIdentifier: PaymentCollectionViewCell.reuseIdentifier)
+        
+        collectionView.allowsSelection = true
+        
         return collectionView
     }()
     
@@ -185,6 +189,17 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat { 7 }
+}
+
+extension PaymentViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedIndexPath = indexPath
+        
+        // Убираем ручное управление isSelected — оно делается автоматически
+        if let selectedCurrency = presenter?.currencies[indexPath.item] {
+            print("✅ Выбрана валюта: \(selectedCurrency.name)")
+        }
+    }
 }
 
 extension PaymentViewController: PaymentViewProtocol {

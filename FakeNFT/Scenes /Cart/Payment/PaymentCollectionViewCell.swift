@@ -14,6 +14,12 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     private let nameLabel = UILabel()
     private let tickerLabel = UILabel()
     
+    override var isSelected: Bool {
+        didSet {
+            contentView.layer.borderColor = isSelected ? UIColor.black.cgColor : UIColor.clear.cgColor
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -27,6 +33,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     private func setupUI() {
         contentView.backgroundColor = .secondarySystemBackground
         contentView.layer.cornerRadius = 12
+        
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.clear.cgColor
         
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.layer.cornerRadius = 8
