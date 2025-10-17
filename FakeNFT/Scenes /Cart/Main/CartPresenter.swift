@@ -17,7 +17,7 @@ protocol CartPresenterProtocol: AnyObject {
     func deleteNFT(_ nft: NFTMock)
 }
 
-enum SortOption {
+enum SortOption: String {
     case price
     case rating
     case name
@@ -30,6 +30,10 @@ final class CartPresenter: CartPresenterProtocol {
     
     private(set) var nfts: [NFTMock] = []
     
+    private let sortOptionKey = "CartSortOption"
+
+    private var currentSortOption: SortOption = .name
+    
     init(view: CartViewProtocol?, cartService: CartServiceProtocol = CartService.shared, router: CartRouterProtocol) {
         self.view = view
         self.cartService = cartService
@@ -40,6 +44,9 @@ final class CartPresenter: CartPresenterProtocol {
     
     func viewDidLoad() {
         nfts = cartService.fetchNFTs()
+        
+        loadSavedSortOption()
+        applyCurrentSort()
         updateSummary()
         view?.reloadData()
     }
@@ -60,7 +67,16 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func didSelectSortOption(_ option: SortOption) {
-        switch option {
+        currentSortOption = option
+        saveSortOption(option)
+
+        applyCurrentSort()
+        view?.reloadData()
+        updateSummary()
+    }
+    
+    private func applyCurrentSort() {
+        switch currentSortOption {
         case .price:
             nfts.sort { $0.price < $1.price }
         case .rating:
@@ -68,8 +84,6 @@ final class CartPresenter: CartPresenterProtocol {
         case .name:
             nfts.sort { $0.name < $1.name }
         }
-        view?.reloadData()
-        updateSummary()
     }
     
     func didTapPayButton() {
@@ -82,6 +96,22 @@ final class CartPresenter: CartPresenterProtocol {
     
     func deleteNFT(_ nft: NFTMock) {
         cartService.removeNFT(nft)
+    }
+}
+
+// MARK: - UserDefaults
+private extension CartPresenter {
+    func saveSortOption(_ option: SortOption) {
+        UserDefaults.standard.set(option.rawValue, forKey: sortOptionKey)
+    }
+
+    func loadSavedSortOption() {
+        if let saved = UserDefaults.standard.string(forKey: sortOptionKey),
+           let option = SortOption(rawValue: saved) {
+            currentSortOption = option
+        } else {
+            currentSortOption = .name
+        }
     }
 }
 
