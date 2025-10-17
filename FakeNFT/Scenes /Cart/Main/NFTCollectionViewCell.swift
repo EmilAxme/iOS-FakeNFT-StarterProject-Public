@@ -45,12 +45,13 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var ratingLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 14, weight: .regular)
-        label.textColor = .systemYellow
-        return label
-    }()
+    private lazy var starsStackView: UIStackView = {
+         let stackView = UIStackView()
+         stackView.axis = .horizontal
+         stackView.spacing = 2
+         stackView.distribution = .fillEqually
+         return stackView
+     }()
     
     private lazy var delButton: UIButton = {
         let button = UIButton(type: .system)
@@ -61,7 +62,7 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     }()
     
     private lazy var labelsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [nftNameLabel, ratingLabel])
+        let stackView = UIStackView(arrangedSubviews: [nftNameLabel, starsStackView])
         stackView.axis = .vertical
         stackView.spacing = 4
         return stackView
@@ -119,7 +120,23 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         nftImageView.image = nft.image
         nftNameLabel.text = nft.name
         nftPriceLabel.text = String(format: Strings.currencyFormat, nft.price)
-        ratingLabel.text = String(repeating: "⭐️", count: nft.rating)
+        updateStars(rating: nft.rating)
+    }
+    
+    private func updateStars(rating: Int) {
+        // очищаем stack перед добавлением новых звёзд
+        starsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        let totalStars = 5
+        for index in 0..<totalStars {
+            let imageView = UIImageView()
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = index < rating
+            ? UIImage(resource: .starsActive)
+            : UIImage(resource: .starsInActive)
+            imageView.tintColor = .systemYellow
+            starsStackView.addArrangedSubview(imageView)
+        }
     }
     
     @objc private func deleteButtonTapped() {
