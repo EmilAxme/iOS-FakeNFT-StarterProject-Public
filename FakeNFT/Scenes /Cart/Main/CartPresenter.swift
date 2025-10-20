@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 protocol CartPresenterProtocol: AnyObject {
     var nfts: [NFTMock] { get }

@@ -124,7 +124,6 @@ final class NFTCollectionViewCell: UICollectionViewCell {
     }
     
     private func updateStars(rating: Int) {
-        // очищаем stack перед добавлением новых звёзд
         starsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         let totalStars = 5
