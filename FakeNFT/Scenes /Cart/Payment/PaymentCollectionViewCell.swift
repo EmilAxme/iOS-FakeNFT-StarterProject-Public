@@ -10,9 +10,41 @@ import UIKit
 final class PaymentCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "PaymentCollectionViewCell"
     
-    private let iconImageView = UIImageView()
-    private let nameLabel = UILabel()
-    private let tickerLabel = UILabel()
+    private lazy var iconImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.layer.cornerRadius = 8
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
+        return label
+    }()
+    
+    private lazy var tickerLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13, weight: .medium)
+        label.textColor = UIColor(resource: .greenYP)
+        return label
+    }()
+    
+    private lazy var labelsStackView: UIStackView = {
+        let labelsStack = UIStackView(arrangedSubviews: [nameLabel, tickerLabel])
+        labelsStack.axis = .vertical
+        labelsStack.spacing = 2
+        return labelsStack
+    }()
+    
+    private lazy var mainStackView: UIStackView = {
+        let mainStack = UIStackView(arrangedSubviews: [iconImageView, labelsStackView])
+        mainStack.axis = .horizontal
+        mainStack.alignment = .center
+        mainStack.spacing = 12
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+        return mainStack
+    }()
     
     override var isSelected: Bool {
         didSet {
@@ -37,24 +69,8 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor.clear.cgColor
         
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.layer.cornerRadius = 8
-        iconImageView.clipsToBounds = true
-        
-        nameLabel.font = .systemFont(ofSize: 15, weight: .semibold)
-        tickerLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        tickerLabel.textColor = UIColor(resource: .greenYP)
-        
-        let labelsStack = UIStackView(arrangedSubviews: [nameLabel, tickerLabel])
-        labelsStack.axis = .vertical
-        labelsStack.spacing = 2
-        
-        let mainStack = UIStackView(arrangedSubviews: [iconImageView, labelsStack])
-        mainStack.axis = .horizontal
-        mainStack.alignment = .center
-        mainStack.spacing = 12
-        mainStack.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(mainStack)
+        mainStackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(mainStackView)
         
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -62,10 +78,10 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
             iconImageView.widthAnchor.constraint(equalToConstant: 40),
             iconImageView.heightAnchor.constraint(equalToConstant: 40),
             
-            mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            mainStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            mainStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            mainStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            mainStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
     
