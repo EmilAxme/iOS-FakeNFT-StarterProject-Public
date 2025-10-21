@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol PaymentViewProtocol: AnyObject {
     func reloadData()
     func showPaymentErrorAlert()
+    func showLoading()
+    func hideLoading()
 }
 
 final class PaymentViewController: UIViewController {
@@ -96,6 +99,7 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        CoinsCollectionView.isHidden = true
         view.backgroundColor = .systemBackground
         setupNavigationBar()
         setupUI()
@@ -204,6 +208,15 @@ extension PaymentViewController: UICollectionViewDelegate {
 extension PaymentViewController: PaymentViewProtocol {
     func reloadData() {
         CoinsCollectionView.reloadData()
+        CoinsCollectionView.isHidden = false
+    }
+    
+    func showLoading() {
+        ProgressHUD.show()
+    }
+
+    func hideLoading() {
+        ProgressHUD.dismiss()
     }
     
     //показывается при первом нажатии на кнопку оплаты
