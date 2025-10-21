@@ -9,7 +9,6 @@ import UIKit
 
 protocol PaymentViewProtocol: AnyObject {
     func reloadData()
-    func showPaymentErrorAlert()
 }
 
 final class PaymentViewController: UIViewController {
@@ -145,7 +144,6 @@ final class PaymentViewController: UIViewController {
     }
     
     @objc private func payButtonTapped() {
-        presenter?.didTapPayButton()
     }
 }
 
@@ -206,21 +204,5 @@ extension PaymentViewController: PaymentViewProtocol {
         CoinsCollectionView.reloadData()
     }
     
-    //показывается при первом нажатии на кнопку оплаты
-    func showPaymentErrorAlert() {
-        let alert = UIAlertController(
-            title: Strings.alertTitle,
-            message: Strings.alertMessage,
-            preferredStyle: .alert
-        )
-        
-        let cancelAction = UIAlertAction(title: Strings.cancel, style: .cancel)
-        let retryAction = UIAlertAction(title: Strings.retry, style: .default) { [weak self] _ in
-            self?.presenter?.didTapPayButton()
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(retryAction)
-        present(alert, animated: true)
-    }
+
 }
