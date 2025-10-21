@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class PaymentCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "PaymentCollectionViewCell"
     
     private lazy var iconImageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
@@ -86,8 +87,13 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with model: CurrencyModel) {
-        iconImageView.image = model.icon
-        nameLabel.text = model.name
-        tickerLabel.text = model.ticker
+        nameLabel.text = model.title
+        tickerLabel.text = model.name
+        
+        if let url = URL(string: model.image) {
+            iconImageView.kf.setImage(with: url, placeholder: UIImage(resource: .cardano))
+        } else {
+            iconImageView.image = UIImage(resource: .cardano)
+        }
     }
 }
