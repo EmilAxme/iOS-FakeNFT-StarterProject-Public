@@ -17,14 +17,17 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     weak var view: PaymentViewController?
     private let router: PaymentRouterProtocol
     private let cartService: CartServiceProtocol
-    var currencies: [CurrencyModel] = []
+    private let currencyService: CurrencyServiceProtocol
     
+    var currencies: [CurrencyModel] = []
+
     private var hasFailedOnce = false
     
-    init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol) {
+    init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol, currencyService: CurrencyServiceProtocol = CurrencyService()) {
         self.view = view
         self.router = router
         self.cartService = cartService
+        self.currencyService = currencyService
     }
     
     func viewDidLoad() {
