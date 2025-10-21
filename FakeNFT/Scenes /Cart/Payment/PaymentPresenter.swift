@@ -10,7 +10,7 @@ import UIKit
 protocol PaymentPresenterProtocol: AnyObject {
     var currencies: [CurrencyModel] { get }
     func viewDidLoad()
-    
+    func didTapPayButton()
 }
 
 final class PaymentPresenter: PaymentPresenterProtocol {
@@ -40,6 +40,16 @@ final class PaymentPresenter: PaymentPresenterProtocol {
         view?.reloadData()
     }
     
-
+    func didTapPayButton() {
+        if !hasFailedOnce {
+            hasFailedOnce = true
+            view?.showPaymentErrorAlert()
+        } else {
+            // Со второго раза будет успех и покажет экран успеха
+            router.openPaymentSuccess()
+            cartService.clearCart()
+            hasFailedOnce = false
+        }
+    }
 }
 
