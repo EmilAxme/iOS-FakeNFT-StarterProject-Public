@@ -8,12 +8,12 @@
 import Foundation
 
 protocol CartPresenterProtocol: AnyObject {
-    var nfts: [NFTMock] { get }
+    var nfts: [NFTModel] { get }
     func didTapPayButton()
     func didTapSortButton()
     func viewDidLoad()
     func didSelectSortOption(_ option: SortOption)
-    func deleteNFT(_ nft: NFTMock)
+    func deleteNFT(_ nft: NFTModel)
 }
 
 enum SortOption: String {
@@ -27,7 +27,7 @@ final class CartPresenter: CartPresenterProtocol {
     private let cartService: CartServiceProtocol
     private let router: CartRouterProtocol
     
-    private(set) var nfts: [NFTMock] = []
+    private(set) var nfts: [NFTModel] = []
     
     private let sortOptionKey = "CartSortOption"
 
@@ -89,7 +89,7 @@ final class CartPresenter: CartPresenterProtocol {
         router.openPaymentSelection()
     }
     
-    func deleteNFT(_ nft: NFTMock) {
+    func deleteNFT(_ nft: NFTModel) {
         cartService.removeNFT(nft)
     }
     
