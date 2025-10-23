@@ -34,3 +34,32 @@ final class NftServiceImpl: NftService {
         }
     }
 }
+
+extension NftServiceImpl {
+    func loadNfts(ids: [String], completion: @escaping (Result<[Nft], Error>) -> Void) {
+        var result: [Nft] = []
+        var lastError: Error?
+        let group = DispatchGroup()
+        
+        for id in ids {
+            group.enter()
+            loadNft(id: id) { nftResult in
+                switch nftResult {
+                case .success(let nft):
+                    result.append(nft)
+                case .failure(let error):
+                    lastError = error
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if let error = lastError, result.isEmpty {
+                completion(.failure(error))
+            } else {
+                completion(.success(result))
+            }
+        }
+    }
+}
