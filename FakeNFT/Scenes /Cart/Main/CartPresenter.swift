@@ -42,12 +42,9 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func viewDidLoad() {
-        nfts = cartService.fetchNFTs()
+        cartService.loadCartFromServer()
         
         loadSavedSortOption()
-        applyCurrentSort()
-        updateSummary()
-        view?.reloadData()
     }
     
     private func updateSummary() {
@@ -117,6 +114,7 @@ private extension CartPresenter {
 extension CartPresenter: CartServiceDelegate {
     func cartDidUpdate(_ cartService: CartServiceProtocol) {
         nfts = cartService.fetchNFTs()
+        applyCurrentSort()
         view?.reloadData()
         updateSummary()
     }
