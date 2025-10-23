@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol CartViewProtocol: AnyObject {
     func reloadData()
@@ -42,7 +43,7 @@ final class CartViewController: UIViewController {
         collectionView.register(NFTCollectionViewCell.self, forCellWithReuseIdentifier: NFTCollectionViewCell.reuseIdentifier)
         return collectionView
     }()
-        
+    
     private lazy var nftCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .medium)
@@ -118,11 +119,11 @@ final class CartViewController: UIViewController {
             stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             inPayButton.heightAnchor.constraint(equalToConstant: 44),
-
+            
             paymentZoneStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentZoneStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
+            
             nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -133,7 +134,7 @@ final class CartViewController: UIViewController {
     private func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
         navigationController.navigationBar.prefersLargeTitles = false
-
+        
         let sortImage = UIImage(resource: .sort)
         let sortButton = UIBarButtonItem(
             image: sortImage,
@@ -173,14 +174,15 @@ final class CartViewController: UIViewController {
         presenter?.didTapSortButton()
     }
     
-    private func showDeleteDialog(for nft: NFTMock) {
+    private func showDeleteDialog(for nft: NFTModel) {
         let alertVC = DeleteNFTAlertViewController()
         alertVC.modalPresentationStyle = .overFullScreen
         alertVC.modalTransitionStyle = .crossDissolve
-        alertVC.nftImage = nft.image
+        alertVC.nftImageURL = nft.imageURL
         alertVC.onDelete = { [weak self] in
             self?.presenter?.deleteNFT(nft)
         }
+
         present(alertVC, animated: true)
     }
 }
@@ -193,7 +195,7 @@ extension CartViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NFTCollectionViewCell.reuseIdentifier, for: indexPath) as? NFTCollectionViewCell,
-            let nft = presenter?.nfts[indexPath.item]
+            let nft = presenter?.nfts[indexPath.row]
         else {
             return UICollectionViewCell()
         }
