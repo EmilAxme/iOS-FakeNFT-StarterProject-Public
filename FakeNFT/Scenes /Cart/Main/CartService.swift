@@ -12,12 +12,13 @@ protocol CartServiceDelegate: AnyObject {
 }
 
 protocol CartServiceProtocol: AnyObject {
-    var nfts: [NFTMock] { get }
+    var nfts: [NFTModel] { get }
     var delegate: CartServiceDelegate? { get set }
     
-    func fetchNFTs() -> [NFTMock]
-    func addNFT(_ nft: NFTMock)
-    func removeNFT(_ nft: NFTMock)
+    func loadCartFromServer()
+    func fetchNFTs() -> [NFTModel]
+    func addNFT(_ nft: NFTModel)
+    func removeNFT(_ nft: NFTModel)
     func clearCart()
 }
 
@@ -31,27 +32,24 @@ final class CartService: CartServiceProtocol {
     
     static let shared = CartService() 
     
-    private(set) var nfts: [NFTMock] = [
-        NFTMock(name: "April", price: 1.78, rating: 1, image: UIImage(resource: .nft1)),
-        NFTMock(name: "Greena", price: 1.78, rating: 3, image: UIImage(resource: .nft2)),
-        NFTMock(name: "Spring", price: 1.78, rating: 5, image: UIImage(resource: .nft3))
-    ] {
+    private(set) var nfts: [NFTModel] = [] {
         didSet { delegate?.cartDidUpdate(self) }
     }
     
     private init() {}
     
-    func fetchNFTs() -> [NFTMock] {
+    
+    func fetchNFTs() -> [NFTModel] {
         return nfts
     }
     
-    func removeNFT(_ nft: NFTMock) {
-        nfts.removeAll { $0.name == nft.name }
+    func removeNFT(_ nft: NFTModel) {
+        nfts.removeAll { $0.id == nft.id }
         postUpdateNotification()
     }
     
-    func addNFT(_ nft: NFTMock) {
-        guard !nfts.contains(where: { $0.name == nft.name }) else { return }
+    func addNFT(_ nft: NFTModel) {
+        guard !nfts.contains(where: { $0.id == nft.id }) else { return }
         nfts.append(nft)
         postUpdateNotification()
     }
