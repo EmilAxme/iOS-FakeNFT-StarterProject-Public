@@ -15,13 +15,13 @@ final class DeleteNFTAlertViewController: UIViewController {
         static let cancel = "Delete.cancelButton".localized
     }
     
-    var nftImage: UIImage?
+    var nftImageURL: String?
     var onDelete: (() -> Void)?
     
     private lazy var blurView: UIVisualEffectView = {
-        let blur = UIBlurEffect(style: .light) // Светлый стиль вместо .systemUltraThinMaterialDark
+        let blur = UIBlurEffect(style: .light) //
         let view = UIVisualEffectView(effect: blur)
-        view.alpha = 1 // оставляем 1, чтобы не затемнять дополнительно
+        view.alpha = 1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -36,7 +36,6 @@ final class DeleteNFTAlertViewController: UIViewController {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = nftImage
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
@@ -90,6 +89,9 @@ final class DeleteNFTAlertViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        if let urlString = nftImageURL, let url = URL(string: urlString) {
+            imageView.kf.setImage(with: url, placeholder: UIImage(resource: .nft1))
+        }
         animateIn()
     }
     
