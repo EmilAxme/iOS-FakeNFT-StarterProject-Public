@@ -91,9 +91,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
         tickerLabel.text = model.name
         
         if let url = URL(string: model.image) {
-            iconImageView.kf.setImage(with: url, placeholder: UIImage(resource: .cardano))
+            iconImageView.kf.setImage(with: url, placeholder: UIImage(resource: .nft1))
         } else {
-            iconImageView.image = UIImage(resource: .cardano)
+            iconImageView.image = UIImage(resource: .nft1)
         }
     }
 }
