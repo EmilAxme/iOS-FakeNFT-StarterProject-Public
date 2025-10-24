@@ -5,7 +5,7 @@
 //  Created by Emil on 09.10.2025.
 //
 
-import Foundation
+import UIKit
 
 protocol CartPresenterProtocol: AnyObject {
     var nfts: [NFTModel] { get }
@@ -42,8 +42,7 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func viewDidLoad() {
-        view?.showLoading()
-        cartService.loadCartFromServer()
+        reloadCart()
         
         loadSavedSortOption()
     }
@@ -60,6 +59,28 @@ final class CartPresenter: CartPresenterProtocol {
             view?.showEmptyCart()
         } else {
             view?.hideEmptyCart()
+        }
+    }
+    
+    func reloadCart() {
+        view?.showLoading()
+        cartService.loadCartFromServer { [weak self] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.view?.hideLoading()
+                switch result {
+                case .success:
+                    self.cartDidUpdate(self.cartService)
+                case .failure(let error):
+                    ErrorAlertHelper.showRetryAlert(
+                        on: self.view as? UIViewController,
+                        message: "Failed to load your cart. Please check your connection."
+                    ) { [weak self] in
+                        self?.reloadCart()
+                    }
+                    print("❌ Cart loading error: \(error)")
+                }
+            }
         }
     }
     
