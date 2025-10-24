@@ -23,6 +23,11 @@ enum SortOption: String {
 }
 
 final class CartPresenter: CartPresenterProtocol {
+    
+    private enum Constants {
+        static let cartErrorLable = "Cart.error.loading".localized
+    }
+    
     weak var view: CartViewProtocol?
     private let cartService: CartServiceProtocol
     private let router: CartRouterProtocol
@@ -74,7 +79,7 @@ final class CartPresenter: CartPresenterProtocol {
                 case .failure(let error):
                     ErrorAlertHelper.showRetryAlert(
                         on: self.view as? UIViewController,
-                        message: "Failed to load your cart. Please check your connection."
+                        message: Constants.cartErrorLable
                     ) { [weak self] in
                         self?.reloadCart()
                     }

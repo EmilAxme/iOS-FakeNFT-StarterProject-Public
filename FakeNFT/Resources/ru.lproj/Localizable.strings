@@ -19,6 +19,7 @@
 "Cart.sort.byRating" = "По рейтингу";
 "Cart.sort.byName" = "По названию";
 "Cart.sort.close" = "Закрыть";
+"Cart.error.loading" = "Не удалось загрузить корзину. Проверьте подключение к сети.";
 
 // MARK: - Delete Alert
 "Delete.confirmation" = "Вы уверены, что хотите удалить объект из корзины?";
