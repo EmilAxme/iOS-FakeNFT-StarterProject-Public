@@ -82,6 +82,10 @@ final class PaymentPresenter: PaymentPresenterProtocol {
         }
     }
     
+    func didTapAgreementButton() {
+        router.openAgreementPage()
+    }
+    
     func selectCurrency(at index: Int) {
         selectedCurrencyId = currencies[index].id
     }
