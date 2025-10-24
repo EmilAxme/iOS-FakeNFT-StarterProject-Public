@@ -199,9 +199,7 @@ extension PaymentViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
 
-        if let selectedCurrency = presenter?.currencies[indexPath.item] {
-            print("✅ Выбрана валюта: \(selectedCurrency.name)")
-        }
+        presenter?.selectCurrency(at: indexPath.item)
     }
 }
 
