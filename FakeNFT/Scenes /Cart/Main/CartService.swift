@@ -70,17 +70,27 @@ final class CartService: CartServiceProtocol {
         return nfts
     }
     
-    func removeNFT(_ nft: NFTModel) {
-        nfts.removeAll { $0.id == nft.id }
-        postUpdateNotification()
-    }
-    
     func addNFT(_ nft: NFTModel) {
         guard !nfts.contains(where: { $0.id == nft.id }) else { return }
         nfts.append(nft)
         postUpdateNotification()
     }
     
+    func removeNFT(_ nft: NFTModel) {
+        let updatedNFTs = nfts.filter { $0.name != nft.name }
+        let nftIDs = updatedNFTs.map { $0.id }
+
+        syncOrderWithServer(nftIDs: nftIDs) { [weak self] success in
+            guard let self else { return }
+            if success {
+                self.nfts = updatedNFTs
+                self.postUpdateNotification()
+            } else {
+                print("❌ Не удалось удалить NFT — сервер не подтвердил изменение")
+            }
+        }
+    }
+
     func clearCart() {
         nfts.removeAll()
         postUpdateNotification()
