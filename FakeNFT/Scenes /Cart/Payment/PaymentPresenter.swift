@@ -11,6 +11,7 @@ protocol PaymentPresenterProtocol: AnyObject {
     var currencies: [CurrencyModel] { get }
     func viewDidLoad()
     func didTapPayButton()
+    func selectCurrency(at index: Int)
 }
 
 final class PaymentPresenter: PaymentPresenterProtocol {
@@ -41,7 +42,7 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     private func loadCurrencies() {
         currencyService.loadCurrencies { [weak self] result in
             guard let self else { return }
-
+            view?.showLoading()
             switch result {
             case .success(let currencies):
                 self.currencies = currencies
@@ -49,22 +50,40 @@ final class PaymentPresenter: PaymentPresenterProtocol {
                 self.view?.hideLoading()
             case .failure(let error):
                 print("❌ Ошибка загрузки валют: \(error.localizedDescription)")
-                self.view?.hideLoading()
                 self.view?.showPaymentErrorAlert()
             }
         }
     }
     
     func didTapPayButton() {
-        if !hasFailedOnce {
-            hasFailedOnce = true
-            view?.showPaymentErrorAlert()
-        } else {
-            // Со второго раза будет успех и покажет экран успеха
-            router.openPaymentSuccess()
-            cartService.clearCart()
-            hasFailedOnce = false
+        guard let selectedId = selectedCurrencyId else {
+            print("❌ Валюта не выбрана")
+            return
         }
+
+        view?.showLoading()
+        paymentService.pay(with: selectedId) { [weak self] result in
+            guard let self else { return }
+            self.view?.hideLoading()
+
+            switch result {
+            case .success(let response):
+                if response.success {
+                    print("✅ Оплата прошла успешно валютой ID: \(response.id)")
+                    self.router.openPaymentSuccess()
+                    self.cartService.clearCart()
+                } else {
+                    self.view?.showPaymentErrorAlert()
+                }
+            case .failure(let error):
+                print("❌ Ошибка оплаты: \(error.localizedDescription)")
+                self.view?.showPaymentErrorAlert()
+            }
+        }
+    }
+    
+    func selectCurrency(at index: Int) {
+        selectedCurrencyId = currencies[index].id
     }
 }
 
