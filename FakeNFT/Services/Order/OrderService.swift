@@ -9,6 +9,7 @@ import Foundation
 
 protocol OrderServiceProtocol {
     func loadOrder(completion: @escaping (Result<OrderModel, Error>) -> Void)
+    func updateOrder(nftIDs: [String], completion: @escaping (Result<OrderModel, Error>) -> Void)
 }
 
 final class OrderService: OrderServiceProtocol {
@@ -20,6 +21,12 @@ final class OrderService: OrderServiceProtocol {
     
     func loadOrder(completion: @escaping (Result<OrderModel, Error>) -> Void) {
         let request = OrderRequest()
+        networkClient.send(request: request, type: OrderModel.self, onResponse: completion)
+    }
+    
+    func updateOrder(nftIDs: [String], completion: @escaping (Result<OrderModel, Error>) -> Void) {
+        let dto = OrderUpdateDto(nfts: nftIDs)
+        let request = OrderUpdateRequest(dto: dto)
         networkClient.send(request: request, type: OrderModel.self, onResponse: completion)
     }
 }
