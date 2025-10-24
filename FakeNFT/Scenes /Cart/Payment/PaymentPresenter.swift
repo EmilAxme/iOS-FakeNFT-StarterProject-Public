@@ -11,6 +11,7 @@ protocol PaymentPresenterProtocol: AnyObject {
     var currencies: [CurrencyModel] { get }
     func viewDidLoad()
     func didTapPayButton()
+    func didTapAgreementButton()
     func selectCurrency(at index: Int)
 }
 
@@ -37,22 +38,6 @@ final class PaymentPresenter: PaymentPresenterProtocol {
         view?.showLoading()
         loadCurrencies()
         view?.reloadData()
-    }
-    
-    private func loadCurrencies() {
-        currencyService.loadCurrencies { [weak self] result in
-            guard let self else { return }
-            view?.showLoading()
-            switch result {
-            case .success(let currencies):
-                self.currencies = currencies
-                self.view?.reloadData()
-                self.view?.hideLoading()
-            case .failure(let error):
-                print("❌ Ошибка загрузки валют: \(error.localizedDescription)")
-                self.view?.showPaymentErrorAlert()
-            }
-        }
     }
     
     func didTapPayButton() {
@@ -88,6 +73,26 @@ final class PaymentPresenter: PaymentPresenterProtocol {
     
     func selectCurrency(at index: Int) {
         selectedCurrencyId = currencies[index].id
+    }
+    
+    private func loadCurrencies() {
+        view?.showLoading()
+        currencyService.loadCurrencies { [weak self] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.view?.hideLoading()
+                switch result {
+                case .success(let currencies):
+                    self.currencies = currencies
+                    self.view?.reloadData()
+                case .failure(let error):
+                    print("❌ Ошибка загрузки валют: \(error.localizedDescription)")
+                    self.view?.showLoadCurrencyErrorAlert { [weak self] in
+                        self?.loadCurrencies() 
+                    }
+                }
+            }
+        }
     }
 }
 
