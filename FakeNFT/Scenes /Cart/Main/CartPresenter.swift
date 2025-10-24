@@ -42,6 +42,7 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func viewDidLoad() {
+        view?.showLoading()
         cartService.loadCartFromServer()
         
         loadSavedSortOption()
@@ -117,5 +118,11 @@ extension CartPresenter: CartServiceDelegate {
         applyCurrentSort()
         view?.reloadData()
         updateSummary()
+        
+        if nfts.isEmpty {
+            view?.showEmptyCart()
+        } else {
+            view?.hideEmptyCart()
+        }
     }
 }
