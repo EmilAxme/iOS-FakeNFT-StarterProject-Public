@@ -15,7 +15,7 @@ protocol CartServiceProtocol: AnyObject {
     var nfts: [NFTModel] { get }
     var delegate: CartServiceDelegate? { get set }
     
-    func loadCartFromServer()
+    func loadCartFromServer(completion: ((Result<[NFTModel], Error>) -> Void)?)
     func fetchNFTs() -> [NFTModel]
     func addNFT(_ nft: NFTModel)
     func removeNFT(_ nft: NFTModel)
@@ -40,7 +40,7 @@ final class CartService: CartServiceProtocol {
     
     private init() {}
     
-    func loadCartFromServer() {
+    func loadCartFromServer(completion: ((Result<[NFTModel], Error>) -> Void)? = nil) {
         orderService.loadOrder { [weak self] result in
             guard let self else { return }
             
@@ -49,19 +49,25 @@ final class CartService: CartServiceProtocol {
                 self.nftService.loadNfts(ids: order.nfts) { nftsResult in
                     switch nftsResult {
                     case .success(let nfts):
-                        self.nfts = nfts.map {
-                            NFTModel(id: $0.id,
-                                     name: $0.name,
-                                     price: $0.price,
-                                     rating: $0.rating,
-                                     imageURL: $0.images.first ?? "")
+                        let nftModels = nfts.map {
+                            NFTModel(
+                                id: $0.id,
+                                name: $0.name,
+                                price: $0.price,
+                                rating: $0.rating,
+                                imageURL: $0.images.first ?? ""
+                            )
                         }
+                        self.nfts = nftModels
+                        completion?(.success(nftModels)) 
                     case .failure(let error):
                         print("❌ Ошибка загрузки NFT: \(error)")
+                        completion?(.failure(error))
                     }
                 }
             case .failure(let error):
                 print("❌ Ошибка загрузки заказа: \(error)")
+                completion?(.failure(error))
             }
         }
     }
