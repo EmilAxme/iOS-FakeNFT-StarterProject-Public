@@ -12,7 +12,7 @@ struct OrderUpdateDto: Dto {
     
     func asDictionary() -> [String : String] {
         if nfts.isEmpty {
-            return [:] // не передаём поле вообще
+            return [:] 
         } else {
             return ["nfts": nfts.joined(separator: ",")]
         }

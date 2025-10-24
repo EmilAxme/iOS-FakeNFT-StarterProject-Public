@@ -84,6 +84,17 @@ final class CartService: CartServiceProtocol {
     func clearCart() {
         nfts.removeAll()
         postUpdateNotification()
+    private func syncOrderWithServer(nftIDs: [String], completion: @escaping (Bool) -> Void) {
+        orderService.updateOrder(nftIDs: nftIDs) { result in
+            switch result {
+            case .success(let order):
+                print("✅ Заказ обновлён на сервере: \(order)")
+                completion(true)
+            case .failure(let error):
+                print("❌ Ошибка обновления заказа: \(error)")
+                completion(false)
+            }
+        }
     }
     
     private func postUpdateNotification() {
