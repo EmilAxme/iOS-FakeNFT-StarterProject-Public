@@ -92,8 +92,17 @@ final class CartService: CartServiceProtocol {
     }
 
     func clearCart() {
-        nfts.removeAll()
-        postUpdateNotification()
+        syncOrderWithServer(nftIDs: []) { [weak self] success in
+            guard let self else { return }
+            if success {
+                self.nfts.removeAll()
+                self.postUpdateNotification()
+            } else {
+                print("❌ Не удалось очистить корзину — сервер не подтвердил изменение")
+            }
+        }
+    }
+
     private func syncOrderWithServer(nftIDs: [String], completion: @escaping (Bool) -> Void) {
         orderService.updateOrder(nftIDs: nftIDs) { result in
             switch result {
