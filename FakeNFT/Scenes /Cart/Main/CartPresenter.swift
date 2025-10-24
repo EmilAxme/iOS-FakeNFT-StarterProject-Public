@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 protocol CartPresenterProtocol: AnyObject {
     var nfts: [NFTMock] { get }
@@ -90,12 +89,12 @@ final class CartPresenter: CartPresenterProtocol {
         router.openPaymentSelection()
     }
     
-    func didTapSortButton() {
-        view?.showSortOptions()
-    }
-    
     func deleteNFT(_ nft: NFTMock) {
         cartService.removeNFT(nft)
+    }
+    
+    func didTapSortButton() {
+        view?.showSortOptions()
     }
 }
 

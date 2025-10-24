@@ -194,8 +194,7 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
 extension PaymentViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
-        
-        // Убираем ручное управление isSelected — оно делается автоматически
+
         if let selectedCurrency = presenter?.currencies[indexPath.item] {
             print("✅ Выбрана валюта: \(selectedCurrency.name)")
         }

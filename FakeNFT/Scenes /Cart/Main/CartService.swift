@@ -45,14 +45,14 @@ final class CartService: CartServiceProtocol {
         return nfts
     }
     
-    func addNFT(_ nft: NFTMock) {
-        guard !nfts.contains(where: { $0.name == nft.name }) else { return }
-        nfts.append(nft)
+    func removeNFT(_ nft: NFTMock) {
+        nfts.removeAll { $0.name == nft.name }
         postUpdateNotification()
     }
     
-    func removeNFT(_ nft: NFTMock) {
-        nfts.removeAll { $0.name == nft.name }
+    func addNFT(_ nft: NFTMock) {
+        guard !nfts.contains(where: { $0.name == nft.name }) else { return }
+        nfts.append(nft)
         postUpdateNotification()
     }
     
