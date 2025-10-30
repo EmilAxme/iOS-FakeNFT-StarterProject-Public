@@ -100,6 +100,9 @@ struct DefaultNetworkClient: NetworkClient {
         return send(request: request, completionQueue: completionQueue) { result in
             switch result {
             case let .success(data):
+                if let json = String(data: data, encoding: .utf8) {
+                    print("📦 Ответ сервера: \(json)")
+                }
                 self.parse(data: data, type: type, onResponse: onResponse)
             case let .failure(error):
                 onResponse(.failure(error))

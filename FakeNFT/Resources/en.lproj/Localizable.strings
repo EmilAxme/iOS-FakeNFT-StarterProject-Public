@@ -1,0 +1,45 @@
+// MARK: - Tabs
+"Tab.catalog" = "Catalog";
+"Tab.cart" = "Cart";
+
+// MARK: - Common
+"Common.cancel" = "Cancel";
+"Common.retry" = "Retry";
+"Common.delete" = "Delete";
+"Common.back" = "Back";
+"Common.networkError" = "A network error occurred";
+"Common.unknownError" = "An unknown error occurred";
+"Common.errorTitle" = "Error";
+
+// MARK: - Cart Screen
+"Cart.inPayButton" = "Proceed to Payment";
+"Cart.empty" = "Cart is empty";
+"Cart.sort.title" = "Sorting";
+"Cart.sort.byPrice" = "By price";
+"Cart.sort.byRating" = "By rating";
+"Cart.sort.byName" = "By name";
+"Cart.sort.close" = "Close";
+"Cart.error.loading" = "Failed to load your cart. Please check your connection.";
+
+// MARK: - Delete Alert
+"Delete.confirmation" = "Are you sure you want to remove this item from the cart?";
+"Delete.deleteButton" = "Delete";
+"Delete.cancelButton" = "Go back";
+
+// MARK: - NFT Cell
+"NFT.pricePrefix" = "Price:";
+"NFT.currencyFormat" = "%.2f ETH";
+
+// MARK: - Payment Screen
+"Payment.title" = "Choose a payment method";
+"Payment.termsText" = "By making a purchase, you agree to the terms of";
+"Payment.agreementTitle" = "User Agreement";
+"Payment.payButton" = "Pay";
+"Payment.alertTitle" = "Oops";
+"Payment.alertMessage" = "Payment could not be completed";
+"Payment.alertCancel" = "Cancel";
+"Payment.alertRetry" = "Try again";
+
+// MARK: - Payment Success Screen
+"PaymentSuccess.message" = "Success! Payment completed, congratulations on your purchase!";
+"PaymentSuccess.backButton" = "Return to Cart";
