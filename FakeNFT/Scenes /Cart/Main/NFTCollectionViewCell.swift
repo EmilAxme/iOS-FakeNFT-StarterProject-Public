@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class NFTCollectionViewCell: UICollectionViewCell {
     
@@ -103,6 +104,8 @@ final class NFTCollectionViewCell: UICollectionViewCell {
             nftImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             nftImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             nftImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            nftImageView.widthAnchor.constraint(equalToConstant: 108),
+            nftImageView.heightAnchor.constraint(equalToConstant: 108),
             
             delButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             delButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -116,11 +119,15 @@ final class NFTCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with nft: NFTMock) {
-        nftImageView.image = nft.image
+    func configure(with nft: NFTModel) {
         nftNameLabel.text = nft.name
         nftPriceLabel.text = String(format: Strings.currencyFormat, nft.price)
         updateStars(rating: nft.rating)
+        if let url = URL(string: nft.imageURL) {
+            nftImageView.kf.setImage(with: url)
+        } else {
+            nftImageView.image = UIImage(resource: .nft1)
+        }
     }
     
     private func updateStars(rating: Int) {

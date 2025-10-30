@@ -1,14 +1,15 @@
-//
-//  CurrencyModel.swift
-//  FakeNFT
-//
-//  Created by Emil on 13.10.2025.
-//
+import Foundation
 
-import UIKit
-
-struct CurrencyModel {
+struct CurrencyModel: Decodable {
+    let id: String
     let name: String
-    let ticker: String
-    let icon: UIImage
+    let title: String
+    let image: String  // URL картинки с сервера
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case title
+        case image // ✅ просто "image"
+    }
 }

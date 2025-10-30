@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol CartViewProtocol: AnyObject {
     func reloadData()
@@ -13,6 +14,8 @@ protocol CartViewProtocol: AnyObject {
     func showSortOptions()
     func showEmptyCart()
     func hideEmptyCart()
+    func showLoading()
+    func hideLoading()
 }
 
 final class CartViewController: UIViewController {
@@ -29,6 +32,8 @@ final class CartViewController: UIViewController {
     
     var presenter: CartPresenterProtocol?
     
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    
     private lazy var nftCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -42,7 +47,7 @@ final class CartViewController: UIViewController {
         collectionView.register(NFTCollectionViewCell.self, forCellWithReuseIdentifier: NFTCollectionViewCell.reuseIdentifier)
         return collectionView
     }()
-        
+    
     private lazy var nftCountLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 15, weight: .medium)
@@ -105,35 +110,46 @@ final class CartViewController: UIViewController {
         presenter?.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        showLoading()
+        presenter?.viewDidLoad()
+    }
+    
     private func setupUI() {
         view.addSubview(nftCollectionView)
         view.addSubview(paymentZoneStackView)
         view.addSubview(stubLabel)
+        view.addSubview(activityIndicator)
         nftCollectionView.translatesAutoresizingMaskIntoConstraints = false
         paymentZoneStackView.translatesAutoresizingMaskIntoConstraints = false
         stubLabel.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stubLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stubLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             inPayButton.heightAnchor.constraint(equalToConstant: 44),
-
+            
             paymentZoneStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentZoneStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentZoneStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
+            
             nftCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             nftCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            nftCollectionView.bottomAnchor.constraint(equalTo: paymentZoneStackView.topAnchor, constant: -20)
+            nftCollectionView.bottomAnchor.constraint(equalTo: paymentZoneStackView.topAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     private func setupNavigationBar() {
         guard let navigationController = navigationController else { return }
         navigationController.navigationBar.prefersLargeTitles = false
-
+        
         let sortImage = UIImage(resource: .sort)
         let sortButton = UIBarButtonItem(
             image: sortImage,
@@ -173,14 +189,15 @@ final class CartViewController: UIViewController {
         presenter?.didTapSortButton()
     }
     
-    private func showDeleteDialog(for nft: NFTMock) {
+    private func showDeleteDialog(for nft: NFTModel) {
         let alertVC = DeleteNFTAlertViewController()
         alertVC.modalPresentationStyle = .overFullScreen
         alertVC.modalTransitionStyle = .crossDissolve
-        alertVC.nftImage = nft.image
+        alertVC.nftImageURL = nft.imageURL
         alertVC.onDelete = { [weak self] in
             self?.presenter?.deleteNFT(nft)
         }
+        
         present(alertVC, animated: true)
     }
 }
@@ -193,7 +210,7 @@ extension CartViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NFTCollectionViewCell.reuseIdentifier, for: indexPath) as? NFTCollectionViewCell,
-            let nft = presenter?.nfts[indexPath.item]
+            let nft = presenter?.nfts[indexPath.row]
         else {
             return UICollectionViewCell()
         }
@@ -221,12 +238,14 @@ extension CartViewController: UICollectionViewDelegateFlowLayout {
 
 extension CartViewController: CartViewProtocol {
     func showEmptyCart() {
+        hideLoading()
         nftCollectionView.isHidden = true
         paymentZoneStackView.isHidden = true
         stubLabel.isHidden = false
     }
-
+    
     func hideEmptyCart() {
+        hideLoading()
         nftCollectionView.isHidden = false
         paymentZoneStackView.isHidden = false
         stubLabel.isHidden = true
@@ -239,5 +258,16 @@ extension CartViewController: CartViewProtocol {
     func updateSummary(countText: String, totalText: String) {
         nftCountLabel.text = countText
         totalPriceLabel.text = totalText
+    }
+    
+    func showLoading() {
+        nftCollectionView.isHidden = true
+        paymentZoneStackView.isHidden = true
+        stubLabel.isHidden = true
+        activityIndicator.startAnimating()
+    }
+
+    func hideLoading() {
+        activityIndicator.stopAnimating()
     }
 }

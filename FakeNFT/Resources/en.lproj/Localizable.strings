@@ -19,6 +19,7 @@
 "Cart.sort.byRating" = "By rating";
 "Cart.sort.byName" = "By name";
 "Cart.sort.close" = "Close";
+"Cart.error.loading" = "Failed to load your cart. Please check your connection.";
 
 // MARK: - Delete Alert
 "Delete.confirmation" = "Are you sure you want to remove this item from the cart?";

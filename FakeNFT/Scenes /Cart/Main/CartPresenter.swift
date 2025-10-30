@@ -5,15 +5,15 @@
 //  Created by Emil on 09.10.2025.
 //
 
-import Foundation
+import UIKit
 
 protocol CartPresenterProtocol: AnyObject {
-    var nfts: [NFTMock] { get }
+    var nfts: [NFTModel] { get }
     func didTapPayButton()
     func didTapSortButton()
     func viewDidLoad()
     func didSelectSortOption(_ option: SortOption)
-    func deleteNFT(_ nft: NFTMock)
+    func deleteNFT(_ nft: NFTModel)
 }
 
 enum SortOption: String {
@@ -23,11 +23,16 @@ enum SortOption: String {
 }
 
 final class CartPresenter: CartPresenterProtocol {
+    
+    private enum Constants {
+        static let cartErrorLable = "Cart.error.loading".localized
+    }
+    
     weak var view: CartViewProtocol?
     private let cartService: CartServiceProtocol
     private let router: CartRouterProtocol
     
-    private(set) var nfts: [NFTMock] = []
+    private(set) var nfts: [NFTModel] = []
     
     private let sortOptionKey = "CartSortOption"
 
@@ -42,12 +47,9 @@ final class CartPresenter: CartPresenterProtocol {
     }
     
     func viewDidLoad() {
-        nfts = cartService.fetchNFTs()
+        reloadCart()
         
         loadSavedSortOption()
-        applyCurrentSort()
-        updateSummary()
-        view?.reloadData()
     }
     
     private func updateSummary() {
@@ -62,6 +64,28 @@ final class CartPresenter: CartPresenterProtocol {
             view?.showEmptyCart()
         } else {
             view?.hideEmptyCart()
+        }
+    }
+    
+    func reloadCart() {
+        view?.showLoading()
+        cartService.loadCartFromServer { [weak self] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.view?.hideLoading()
+                switch result {
+                case .success:
+                    self.cartDidUpdate(self.cartService)
+                case .failure(let error):
+                    ErrorAlertHelper.showRetryAlert(
+                        on: self.view as? UIViewController,
+                        message: Constants.cartErrorLable
+                    ) { [weak self] in
+                        self?.reloadCart()
+                    }
+                    print("❌ Cart loading error: \(error)")
+                }
+            }
         }
     }
     
@@ -89,7 +113,7 @@ final class CartPresenter: CartPresenterProtocol {
         router.openPaymentSelection()
     }
     
-    func deleteNFT(_ nft: NFTMock) {
+    func deleteNFT(_ nft: NFTModel) {
         cartService.removeNFT(nft)
     }
     
@@ -117,7 +141,14 @@ private extension CartPresenter {
 extension CartPresenter: CartServiceDelegate {
     func cartDidUpdate(_ cartService: CartServiceProtocol) {
         nfts = cartService.fetchNFTs()
+        applyCurrentSort()
         view?.reloadData()
         updateSummary()
+        
+        if nfts.isEmpty {
+            view?.showEmptyCart()
+        } else {
+            view?.hideEmptyCart()
+        }
     }
 }

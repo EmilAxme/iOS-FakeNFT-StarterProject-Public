@@ -6,10 +6,14 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol PaymentViewProtocol: AnyObject {
     func reloadData()
     func showPaymentErrorAlert()
+    func showLoading()
+    func hideLoading()
+    func showLoadCurrencyErrorAlert(onRetry: @escaping () -> Void)
 }
 
 final class PaymentViewController: UIViewController {
@@ -61,6 +65,7 @@ final class PaymentViewController: UIViewController {
         button.setTitle(Strings.agreementTitle, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
         button.tintColor = .systemBlue
+        button.addTarget(self, action: #selector(agreementButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -96,6 +101,7 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        CoinsCollectionView.isHidden = true
         view.backgroundColor = .systemBackground
         setupNavigationBar()
         setupUI()
@@ -147,6 +153,10 @@ final class PaymentViewController: UIViewController {
     @objc private func payButtonTapped() {
         presenter?.didTapPayButton()
     }
+    
+    @objc private func agreementButtonTapped() {
+        presenter?.didTapAgreementButton()
+    }
 }
 
 extension PaymentViewController: UICollectionViewDataSource {
@@ -195,18 +205,24 @@ extension PaymentViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
 
-        if let selectedCurrency = presenter?.currencies[indexPath.item] {
-            print("✅ Выбрана валюта: \(selectedCurrency.name)")
-        }
+        presenter?.selectCurrency(at: indexPath.item)
     }
 }
 
 extension PaymentViewController: PaymentViewProtocol {
     func reloadData() {
         CoinsCollectionView.reloadData()
+        CoinsCollectionView.isHidden = false
     }
     
-    //показывается при первом нажатии на кнопку оплаты
+    func showLoading() {
+        ProgressHUD.show()
+    }
+
+    func hideLoading() {
+        ProgressHUD.dismiss()
+    }
+
     func showPaymentErrorAlert() {
         let alert = UIAlertController(
             title: Strings.alertTitle,
@@ -221,6 +237,24 @@ extension PaymentViewController: PaymentViewProtocol {
         
         alert.addAction(cancelAction)
         alert.addAction(retryAction)
+        present(alert, animated: true)
+    }
+    
+    func showLoadCurrencyErrorAlert(onRetry: @escaping () -> Void) {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось загрузить валюты. Проверьте подключение к сети.",
+            preferredStyle: .alert
+        )
+        
+        let retryAction = UIAlertAction(title: "Повторить", style: .default) { _ in
+            onRetry()
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(retryAction)
+        
         present(alert, animated: true)
     }
 }

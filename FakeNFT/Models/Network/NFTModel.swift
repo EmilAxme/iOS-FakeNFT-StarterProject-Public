@@ -5,11 +5,12 @@
 //  Created by Emil on 09.10.2025.
 //
 
-import UIKit
+import Foundation
 
-struct NFTMock {
+struct NFTModel {
+    let id: String
     let name: String
     let price: Double
     let rating: Int
-    let image: UIImage
+    let imageURL: String
 }

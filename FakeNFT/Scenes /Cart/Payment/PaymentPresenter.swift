@@ -11,44 +11,87 @@ protocol PaymentPresenterProtocol: AnyObject {
     var currencies: [CurrencyModel] { get }
     func viewDidLoad()
     func didTapPayButton()
+    func didTapAgreementButton()
+    func selectCurrency(at index: Int)
 }
 
 final class PaymentPresenter: PaymentPresenterProtocol {
     weak var view: PaymentViewController?
     private let router: PaymentRouterProtocol
     private let cartService: CartServiceProtocol
+    private let currencyService: CurrencyServiceProtocol
+    private let paymentService: PaymentServiceProtocol
+    
     var currencies: [CurrencyModel] = []
-    
     private var hasFailedOnce = false
+    private var selectedCurrencyId: String?
     
-    init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol) {
+    init(view: PaymentViewController?, cartService: CartServiceProtocol = CartService.shared, router: PaymentRouterProtocol, currencyService: CurrencyServiceProtocol = CurrencyService(), paymentService: PaymentServiceProtocol = PaymentService()) {
         self.view = view
         self.router = router
         self.cartService = cartService
+        self.currencyService = currencyService
+        self.paymentService = paymentService
     }
     
     func viewDidLoad() {
-        currencies = [
-            CurrencyModel(name: "Bitcoin", ticker: "BTC", icon: UIImage(resource: .bitcoin)),
-            CurrencyModel(name: "Dogecoin", ticker: "DOGE", icon: UIImage(resource: .dogecoin)),
-            CurrencyModel(name: "Tether", ticker: "USDT", icon: UIImage(resource: .tether)),
-            CurrencyModel(name: "Apecoin", ticker: "APE", icon: UIImage(resource: .apecoin)),
-            CurrencyModel(name: "Solana", ticker: "SOL", icon: UIImage(resource: .solana)),
-            CurrencyModel(name: "Ethereum", ticker: "ETH", icon: UIImage(resource: .ethereum)),
-            CurrencyModel(name: "Cardano", ticker: "ADA", icon: UIImage(resource: .cardano)),
-            CurrencyModel(name: "Shiba Inu", ticker: "SHIB", icon: UIImage(resource: .shibaInu))]
+        view?.showLoading()
+        loadCurrencies()
         view?.reloadData()
     }
     
     func didTapPayButton() {
-        if !hasFailedOnce {
-            hasFailedOnce = true
-            view?.showPaymentErrorAlert()
-        } else {
-            // Со второго раза будет успех и покажет экран успеха
-            router.openPaymentSuccess()
-            cartService.clearCart()
-            hasFailedOnce = false
+        guard let selectedId = selectedCurrencyId else {
+            print("❌ Валюта не выбрана")
+            return
+        }
+
+        view?.showLoading()
+        paymentService.pay(with: selectedId) { [weak self] result in
+            guard let self else { return }
+            self.view?.hideLoading()
+
+            switch result {
+            case .success(let response):
+                if response.success {
+                    print("✅ Оплата прошла успешно валютой ID: \(response.id)")
+                    self.router.openPaymentSuccess()
+                    self.cartService.clearCart()
+                } else {
+                    self.view?.showPaymentErrorAlert()
+                }
+            case .failure(let error):
+                print("❌ Ошибка оплаты: \(error.localizedDescription)")
+                self.view?.showPaymentErrorAlert()
+            }
+        }
+    }
+    
+    func didTapAgreementButton() {
+        router.openAgreementPage()
+    }
+    
+    func selectCurrency(at index: Int) {
+        selectedCurrencyId = currencies[index].id
+    }
+    
+    private func loadCurrencies() {
+        view?.showLoading()
+        currencyService.loadCurrencies { [weak self] result in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.view?.hideLoading()
+                switch result {
+                case .success(let currencies):
+                    self.currencies = currencies
+                    self.view?.reloadData()
+                case .failure(let error):
+                    print("❌ Ошибка загрузки валют: \(error.localizedDescription)")
+                    self.view?.showLoadCurrencyErrorAlert { [weak self] in
+                        self?.loadCurrencies() 
+                    }
+                }
+            }
         }
     }
 }
