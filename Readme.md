@@ -2,6 +2,8 @@
 
 ## Ссылки
 
+[Скринкаст корзины](https://disk.yandex.ru/i/vhadeRwCVn8e8A)
+
 [Дизайн Figma](https://www.figma.com/design/Uz5G39wRRCr2mRE4SbnNla/FakeNFT--YP-)
 
 ## Назначение и цели приложения

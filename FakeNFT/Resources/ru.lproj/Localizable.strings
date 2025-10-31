@@ -1,0 +1,45 @@
+// MARK: - Tabs
+"Tab.catalog" = "Каталог";
+"Tab.cart" = "Корзина";
+
+// MARK: - Common
+"Common.cancel" = "Отмена";
+"Common.retry" = "Повторить";
+"Common.delete" = "Удалить";
+"Common.back" = "Вернуться";
+"Common.networkError" = "Произошла ошибка сети";
+"Common.unknownError" = "Произошла неизвестная ошибка";
+"Common.errorTitle" = "Ошибка";
+
+// MARK: - Cart Screen
+"Cart.inPayButton" = "К оплате";
+"Cart.empty" = "Корзина пуста";
+"Cart.sort.title" = "Сортировка";
+"Cart.sort.byPrice" = "По цене";
+"Cart.sort.byRating" = "По рейтингу";
+"Cart.sort.byName" = "По названию";
+"Cart.sort.close" = "Закрыть";
+"Cart.error.loading" = "Не удалось загрузить корзину. Проверьте подключение к сети.";
+
+// MARK: - Delete Alert
+"Delete.confirmation" = "Вы уверены, что хотите удалить объект из корзины?";
+"Delete.deleteButton" = "Удалить";
+"Delete.cancelButton" = "Вернуться";
+
+// MARK: - NFT Cell
+"NFT.pricePrefix" = "Цена:";
+"NFT.currencyFormat" = "%.2f ETH";
+
+// MARK: - Payment Screen
+"Payment.title" = "Выберите способ оплаты";
+"Payment.termsText" = "Совершая покупку, вы соглашаетесь с условиями";
+"Payment.agreementTitle" = "Пользовательского соглашения";
+"Payment.payButton" = "Оплатить";
+"Payment.alertTitle" = "Упс";
+"Payment.alertMessage" = "Не удалось произвести оплату";
+"Payment.alertCancel" = "Отмена";
+"Payment.alertRetry" = "Повторить";
+
+// MARK: - Payment Success Screen
+"PaymentSuccess.message" = "Успех! Оплата прошла, поздравляем с покупкой!";
+"PaymentSuccess.backButton" = "Вернуться в корзину";
